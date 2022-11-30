@@ -14,5 +14,8 @@ Cargo.lock
 /target
 /Cargo.lock
 
+# input
+.input
+
 # don't expose session token
 .env
