@@ -1,6 +1,5 @@
-use std::collections::{HashMap, VecDeque};
-
 use aoc::{get_input, AdventDate};
+use std::collections::VecDeque;
 
 const DATE: AdventDate = AdventDate {
     year: super::YEAR,
@@ -8,31 +7,23 @@ const DATE: AdventDate = AdventDate {
 };
 
 fn part1() {
-    let input = get_input(aoc::DecideDate::Choose(DATE));
-    let mut elves = Vec::new();     
-    let mut cals = 0;
+    let input = get_input(DATE);
+    let mut elves = Vec::new();
+    let mut cals: u32 = 0;
     for line in input.lines() {
         if line.is_empty() {
             elves.push(cals);
             cals = 0;
         } else {
-            match line.parse::<i32>() {
-                Ok(n) => cals += n,
-                Err(e) => (),
-            };
+            cals += u32::from_str_radix(line, 10).unwrap();
         }
     }
     println!("part 1, most calories: {:?}", elves.iter().max().unwrap());
 }
 
 fn part2() {
-    let input = get_input(aoc::DecideDate::Choose(DATE));
-    
-    let mut top_3: VecDeque<u32> = VecDeque::new();
-    top_3.push_back(0);
-    top_3.push_back(0);
-    top_3.push_back(0);
-    
+    let input = get_input(DATE);
+    let mut top_3: VecDeque<u32> = VecDeque::from([0, 0, 0]);
     let mut cals = 0;
     for line in input.lines() {
         if line.is_empty() {
@@ -48,10 +39,7 @@ fn part2() {
             }
             cals = 0;
         } else {
-            match line.trim().parse::<u32>() {
-                Ok(n) => cals += n,
-                Err(e) => (),
-            };
+            cals += u32::from_str_radix(line, 10).unwrap();
         }
     }
     let top_3_total: u32 = top_3.iter().sum();
