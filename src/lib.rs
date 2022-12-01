@@ -7,6 +7,11 @@ use std::env;
 use std::path::Path;
 use std::fs;
 
+pub enum AnswerPart {
+    One,
+    Two,
+}
+
 pub enum DecideDate {
     Today,
     Choose(AdventDate)
@@ -23,7 +28,7 @@ pub fn get_input(advent_date: DecideDate) -> String {
         DecideDate::Choose(date) => (date.year, date.day),
     };
     
-    let input_file_path = format!("assets/{}/{}", year, day);
+    let input_file_path = format!("assets/{}/{}.txt", year, day);
     let year_path = format!("assets/{}", year);
     if year_asset_exists(year) {
         if input_asset_exists(year, day) {
@@ -41,11 +46,12 @@ pub fn get_input(advent_date: DecideDate) -> String {
 
 fn download_input(year: i32, day: u32) -> Result<(), String> {
     let url = format!("https://adventofcode.com/{}/day/{}/input", year, day);
-    let filename = format!("assets/{}/{}", year, day);
+    let filename = format!("assets/{}/{}.txt", year, day);
 
     let puzzle_input = build_client()?
         .get(&url)
         .send()
+        .and_then(|response| response.error_for_status())
         .and_then(|response| response.text())
         .map_err(|err| err.to_string())?;
      
@@ -60,7 +66,7 @@ fn year_asset_exists(year: i32) -> bool {
 }
 
 fn input_asset_exists(year: i32, day: u32) -> bool {
-    let relative_dir = format!("assets/{}/{}", year, day);
+    let relative_dir = format!("assets/{}/{}.txt", year, day);
     Path::new(&relative_dir).exists()
 }
 
@@ -85,5 +91,3 @@ fn build_client() -> Result<Client, String> {
         .build()
         .map_err(|err| err.to_string())
 }
-
-// pub fn check_solution(day: u8, part: u8) {}
