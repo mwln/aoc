@@ -14,7 +14,7 @@ fn part1() {
         let ruck_size = line.len() / 2;
         let (part_one, part_two) = line.split_at(ruck_size);
         let dupe = part_one.chars()
-            .find(|c| part_two.contains(&c.to_string()))
+            .find(|c| part_two.contains(*c))
             .unwrap()
             .to_string();
         score += ALPHABET.rfind(&dupe).unwrap() as i32 + 1;
@@ -24,16 +24,16 @@ fn part1() {
 
 fn part2() {
     let input = get_input(DATE);
-    let mut elves: Vec<&str> = Vec::new();
+    let mut elves: Vec<&str> = Vec::with_capacity(3);
     let mut score = 0;
     
     for line in input.lines() {
-        if elves.len() < 2 {
-            elves.push(line);
+        elves.push(line);
+        if elves.len() < 3 {
+            continue;
         } else {
-            elves.push(line);
             let common = elves[0].chars()
-                .find(|c| elves[1].contains(&c.to_string()) && elves[2].contains(&c.to_string()))
+                .find(|c| elves[1].contains(*c) && elves[2].contains(*c))
                 .unwrap()
                 .to_string();  
             score += ALPHABET.rfind(&common).unwrap() as i32 + 1;
