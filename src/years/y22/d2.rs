@@ -1,5 +1,4 @@
 use aoc::{get_input, AdventDate};
-use std::collections::VecDeque;
 
 const DATE: AdventDate = AdventDate {
     year: super::YEAR,
@@ -16,7 +15,6 @@ const SCISSORS: (char, u32) = ('C', 3);
 
 const NEED_WIN: char = 'Z';
 const NEED_LOSS: char = 'X';
-const NEED_DRAW: char = 'Y';
 
 fn part1() {
     let input = get_input(DATE);
@@ -30,21 +28,21 @@ fn part1() {
                 'X' => score += DRAW + ROCK.1,
                 'Y' => score += WIN + PAPER.1,
                 'Z' => score += LOSS + SCISSORS.1,
-                _ => ()
+                _ => (),
             }
         } else if elf == 'B' {
             match me {
                 'X' => score += LOSS + ROCK.1,
                 'Y' => score += DRAW + PAPER.1,
                 'Z' => score += WIN + SCISSORS.1,
-                _ => ()
+                _ => (),
             }
         } else {
             match me {
                 'X' => score += WIN + ROCK.1,
                 'Y' => score += LOSS + PAPER.1,
                 'Z' => score += DRAW + SCISSORS.1,
-                _ => ()
+                _ => (),
             }
         }
     }
