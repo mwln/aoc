@@ -29,7 +29,7 @@ fn create_stacks(input_stack_map: &str) -> HashMap<usize, LinkedList<char>> {
     input_stack_map.split("\n").for_each(|s| {
         s.chars()
             .enumerate()
-            .filter(|(i, c)| c.is_alphabetic())
+            .filter(|(_, c)| c.is_alphabetic())
             .for_each(|(i, c)| {
                 stacks
                     .entry(fix_stack_index(i))
@@ -40,7 +40,11 @@ fn create_stacks(input_stack_map: &str) -> HashMap<usize, LinkedList<char>> {
     return stacks;
 }
 
-fn process_action(action: &Vec<usize>, stacks: &mut HashMap<usize, LinkedList<char>>) {
+fn process_action(
+    action: &Vec<usize>,
+    stacks: &mut HashMap<usize, LinkedList<char>>,
+    part: &aoc::AnswerPart,
+) {
     let mut from = stacks.get(&action[1]).unwrap().clone();
     let mut to = stacks.get(&action[2]).unwrap().clone();
     let amount = if action[0] > from.len() {
@@ -48,27 +52,21 @@ fn process_action(action: &Vec<usize>, stacks: &mut HashMap<usize, LinkedList<ch
     } else {
         action[0]
     };
-    for _ in 0..amount {
-        to.push_back(from.pop_back().unwrap());
-    }
-    stacks.insert(action[1], from);
-    stacks.insert(action[2], to);
-}
-
-fn process_action_part_2(action: &Vec<usize>, stacks: &mut HashMap<usize, LinkedList<char>>) {
-    let mut from = stacks.get(&action[1]).unwrap().clone();
-    let mut to = stacks.get(&action[2]).unwrap().clone();
-    let amount = if action[0] > from.len() {
-        from.len()
-    } else {
-        action[0]
+    match part {
+        aoc::AnswerPart::One => {
+            for _ in 0..amount {
+                to.push_back(from.pop_back().unwrap());
+            }
+        }
+        aoc::AnswerPart::Two => {
+            to.append(&mut from.split_off(from.len() - amount));
+        }
     };
-    to.append(&mut from.split_off(from.len() - amount));
     stacks.insert(action[1], from);
     stacks.insert(action[2], to);
 }
 
-fn part1() {
+fn solve(part: &aoc::AnswerPart) {
     let input = get_input(DATE);
     let input_fixed: Vec<&str> = input.split("\n\n").collect();
     let mut stacks = create_stacks(input_fixed[0]);
@@ -79,30 +77,14 @@ fn part1() {
             .filter(|s| s.chars().all(char::is_numeric))
             .map(|s| s.parse::<usize>().unwrap())
             .collect();
-        process_action(&action_items, &mut stacks);
-    }
-    end_of_stack(stacks);
-}
-
-fn part2() {
-    let input = get_input(DATE);
-    let input_fixed: Vec<&str> = input.split("\n\n").collect();
-    let mut stacks = create_stacks(input_fixed[0]);
-    for action in input_fixed[1].lines() {
-        let action_items: Vec<usize> = action
-            .split_whitespace()
-            .into_iter()
-            .filter(|s| s.chars().all(char::is_numeric))
-            .map(|s| s.parse::<usize>().unwrap())
-            .collect();
-        process_action_part_2(&action_items, &mut stacks);
+        process_action(&action_items, &mut stacks, part);
     }
     end_of_stack(stacks);
 }
 
 pub(crate) fn solution(part: aoc::AnswerPart) {
     match part {
-        aoc::AnswerPart::One => part1(),
-        aoc::AnswerPart::Two => part2(),
+        aoc::AnswerPart::One => solve(&aoc::AnswerPart::One),
+        aoc::AnswerPart::Two => solve(&aoc::AnswerPart::Two),
     };
 }
