@@ -1,7 +1,7 @@
 use aoc;
 
 struct Node {
-    value: usize,
+    size: usize,
     parent: Option<usize>,
     children: Vec<usize>,
 }
@@ -24,7 +24,7 @@ impl Tree {
             self.update_size(Some(parent), value);
         }
         self.files.push(Node {
-            value,
+            size: value,
             parent,
             children: vec![],
         });
@@ -42,7 +42,7 @@ impl Tree {
         let mut current = index;
         while let Some(index) = current {
             let node = &mut self.files[index];
-            node.value += size;
+            node.size += size;
             current = node.parent;
         }
     }
@@ -82,23 +82,23 @@ fn solve(part: aoc::AnswerPart) {
         .filter(|node| node.is_directory())
         .collect();
 
-    let to_delete_size = UPDATE_SIZE - (TOTAL_DISK_SIZE - file_tree.files[0].value);
+    let to_delete_size = UPDATE_SIZE - (TOTAL_DISK_SIZE - file_tree.files[0].size);
 
     match part {
         aoc::AnswerPart::One => println!(
             "part 1 {}",
             directories
                 .iter()
-                .filter(|node| node.value <= MAX_DIR_SIZE)
-                .map(|node| node.value)
+                .filter(|node| node.size <= MAX_DIR_SIZE)
+                .map(|node| node.size)
                 .sum::<usize>()
         ),
         aoc::AnswerPart::Two => println!(
             "part 2 {}",
             directories
                 .iter()
-                .filter(|node| node.value >= to_delete_size)
-                .map(|node| node.value)
+                .filter(|node| node.size >= to_delete_size)
+                .map(|node| node.size)
                 .min()
                 .unwrap_or_default()
         ),
