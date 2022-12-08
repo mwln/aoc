@@ -7,6 +7,7 @@ mod d4;
 mod d5;
 mod d6;
 mod d7;
+mod d8;
 
 pub const YEAR: i32 = 2022;
 
@@ -19,6 +20,7 @@ pub fn get_solution(day: u32, part: AnswerPart ) {
         5 => d5::solution(part),
         6 => d6::solution(part),
         7 => d7::solution(part),
+        8 => d8::solution(part),
         _ => (),
     };
 }

@@ -15,6 +15,8 @@ fn main() {
     // years::y22::get_solution(5, AnswerPart::Two);
     // years::y22::get_solution(6, AnswerPart::One);
     // years::y22::get_solution(6, AnswerPart::Two);
-    years::y22::get_solution(7, AnswerPart::One);
-    years::y22::get_solution(7, AnswerPart::Two);
+    // years::y22::get_solution(7, AnswerPart::One);
+    // years::y22::get_solution(7, AnswerPart::One);
+    years::y22::get_solution(8, AnswerPart::One);
+    // years::y22::get_solution(8, AnswerPart::Two);
 }
