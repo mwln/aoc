@@ -33,15 +33,13 @@ fn part1() {
             "R" => head[1] += motion.steps,
             _ => panic!(),
         };
-        while tail
-            .iter()
-            .zip(&head)
-            .any(|(&t, &h)| t < h - 1 || t > h + 1)
-        {
-            for (t, h) in tail.iter_mut().zip(&head) {
-                match (*t).cmp(h) {
-                    Greater => *t -= 1,
-                    Less => *t += 1,
+        while tail.iter().zip(&head).any(|(&tail_coord, &head_coord)| {
+            tail_coord < head_coord - 1 || tail_coord > head_coord + 1
+        }) {
+            for (tail_coord, head_coord) in tail.iter_mut().zip(&head) {
+                match (*tail_coord).cmp(head_coord) {
+                    Greater => *tail_coord -= 1,
+                    Less => *tail_coord += 1,
                     Equal => (),
                 }
             }
@@ -71,22 +69,20 @@ fn part2() {
 
             for knot in 1..rope.len() {
                 let (front, back) = rope.split_at_mut(knot);
-                if back
-                    .first()
-                    .unwrap()
-                    .iter()
-                    .zip(front.last().unwrap())
-                    .any(|(&t, &h)| t < h - 1 || t > h + 1)
-                {
-                    for (t, h) in back
+                if back.first().unwrap().iter().zip(front.last().unwrap()).any(
+                    |(&tail_coord, &head_coord)| {
+                        tail_coord < head_coord - 1 || tail_coord > head_coord + 1
+                    },
+                ) {
+                    for (tail_coord, head_coord) in back
                         .first_mut()
                         .unwrap()
                         .iter_mut()
                         .zip(front.last().unwrap())
                     {
-                        match (*t).cmp(h) {
-                            Greater => *t -= 1,
-                            Less => *t += 1,
+                        match (*tail_coord).cmp(head_coord) {
+                            Greater => *tail_coord -= 1,
+                            Less => *tail_coord += 1,
                             Equal => {}
                         }
                     }
