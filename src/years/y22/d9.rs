@@ -60,10 +60,10 @@ fn part2() {
     for motion in input.lines().map(|line| Motion::from(line)) {
         for _ in 0..motion.steps {
             match motion.direction.as_str() {
-                "L" => rope[0][0] -= 1,
-                "R" => rope[0][0] += 1,
-                "D" => rope[0][1] -= 1,
-                "U" => rope[0][1] += 1,
+                "D" => rope[0][0] -= 1,
+                "U" => rope[0][0] += 1,
+                "L" => rope[0][1] -= 1,
+                "R" => rope[0][1] += 1,
                 _ => panic!(),
             }
 
