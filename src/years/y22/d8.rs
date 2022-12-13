@@ -157,7 +157,7 @@ impl TreeMap {
     }
 }
 
-fn solve(part: aoc::AnswerPart) {
+fn solve(_part: aoc::AnswerPart) {
     let input = aoc::get_input(aoc::AdventDate { year: 2022, day: 8 });
     let mut tree_map = TreeMap::from(input);
     tree_map.calculate_visibility();

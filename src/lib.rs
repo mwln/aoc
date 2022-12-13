@@ -6,6 +6,7 @@ use std::env;
 use std::fs;
 use std::path::Path;
 
+#[derive(Debug)]
 pub enum AnswerPart {
     One,
     Two,

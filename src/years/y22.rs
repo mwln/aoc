@@ -1,6 +1,8 @@
 use aoc::AnswerPart;
 
 mod d1;
+mod d10;
+mod d11;
 mod d2;
 mod d3;
 mod d4;
@@ -9,11 +11,10 @@ mod d6;
 mod d7;
 mod d8;
 mod d9;
-mod d10;
 
 pub const YEAR: i32 = 2022;
 
-pub fn get_solution(day: u32, part: AnswerPart ) {
+pub fn get_solution(day: u32, part: AnswerPart) {
     match day {
         1 => d1::solution(part),
         2 => d2::solution(part),
@@ -25,6 +26,7 @@ pub fn get_solution(day: u32, part: AnswerPart ) {
         8 => d8::solution(part),
         9 => d9::solution(part),
         10 => d10::solution(part),
+        11 => d11::solution(part),
         _ => (),
     };
 }
