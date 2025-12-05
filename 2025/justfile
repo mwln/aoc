@@ -1,0 +1,113 @@
+# list available commands
+default:
+    @echo "commands take <day> <part> arguments"
+    @echo "day and part are optional (defaults to today, part 1)"
+    @echo ""
+    @just --list
+
+# format and check code with rubocop
+check:
+    rubocop -A
+
+# show completion stats
+stats:
+    ruby scripts/stats.rb
+
+# run a solution file
+run day=`date +%-d`:
+    ruby days/{{day}}.rb
+
+# read problem description
+read day=`date +%-d` part="1":
+    ruby scripts/read_problem.rb -d {{day}} -p {{part}} | less -R
+
+# show extracted examples
+eg day=`date +%-d`:
+    ruby scripts/read_problem.rb -d {{day}} -e
+
+# solve with real input
+solve day=`date +%-d`:
+    ruby scripts/solve.rb -d {{day}}
+
+# submit answer
+submit day=`date +%-d` part="1":
+    ruby scripts/submit.rb -d {{day}} -p {{part}}
+
+# generate scaffolding for new day
+start day=`date +%-d`:
+    #!/usr/bin/env ruby
+    day = {{day}}
+    solution_file = "days/#{day}.rb"
+    
+    if File.exist?(solution_file)
+      puts "#{solution_file} already exists"
+      exit 1
+    end
+    
+    Dir.mkdir('days') unless Dir.exist?('days')
+    
+    puts "Fetching problem and input for day #{day}..."
+    system("ruby scripts/read_problem.rb -d #{day}") || exit(1)
+    system("ruby scripts/solve.rb -d #{day} > /dev/null 2>&1")
+    
+    class_name = "Day" + day.to_s.rjust(2, '0')
+    template = <<~TEMPLATE
+    require_relative '../lib/solution'
+
+    class #{class_name} < Solution
+      def part_one
+        '0'
+      end
+
+      def part_two
+        '0'
+      end
+    end
+
+    #{class_name}.new.run if __FILE__ == $PROGRAM_NAME
+    TEMPLATE
+    File.write(solution_file, template)
+    puts "created #{solution_file}"
+
+    unless File.exist?('example.txt')
+      File.write('example.txt', '')
+      puts 'created example.txt'
+    end
+
+# run with example input
+try day=`date +%-d` part="":
+    #!/usr/bin/env ruby
+    year = 2025
+    day = {{day}}
+    part = "{{part}}"
+    solution_file = "days/#{day}.rb"
+    unless File.exist?(solution_file)
+      puts "no solution file found for day #{day}"
+      exit 1
+    end
+
+    example_path = ".cache/#{year}/#{day}/examples/1.txt"
+    unless File.exist?(example_path)
+      puts "no example found for day #{day}"
+      exit 1
+    end
+
+    # Backup and symlink example
+    File.delete('input.txt') if File.symlink?('input.txt')
+    File.rename('input.txt', 'input.txt.bak') if File.exist?('input.txt')
+    File.symlink(example_path, 'input.txt')
+
+    begin
+      if part.empty?
+        system("ruby #{solution_file}")
+      else
+        load File.expand_path(solution_file)
+        class_name = "Day#{day.to_s.rjust(2, '0')}"
+        solution = Object.const_get(class_name).new
+        result = part == "1" ? solution.part_one : solution.part_two
+        puts "Part #{part}: #{result}"
+      end
+    ensure
+      File.delete('input.txt') if File.symlink?('input.txt')
+      File.rename('input.txt.bak', 'input.txt') if File.exist?('input.txt.bak')
+    end

@@ -1,0 +1,12 @@
+.envrc
+*.txt
+*.txt.bak
+.cache/
+.ruby-lsp/
+*.gem
+*.rbc
+.bundle/
+vendor/bundle/
+*~
+.DS_Store
+Thumbs.db
